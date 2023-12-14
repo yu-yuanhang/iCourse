@@ -13,6 +13,7 @@ enum ClassType {
 class Basic {
 public:
     Basic(size_t courseID, const char *classroom, size_t hour, const char *classTime, ClassType classType):
+    _next(nullptr),
     _courseID(courseID),
     _classroom{'\0','\0','\0','\0','\0'},
     _hour(hour),
@@ -35,6 +36,7 @@ protected:
     
 
 public:
+    void *_next;
     static size_t _currentID;//初始化为 0
 
 protected:
@@ -57,8 +59,7 @@ public:
     _Credit(Credit),
     _maxSeats(maxSeats),
     _spareSeats(spareSeats),
-    _fileNum(fileNum),
-    _next(nullptr)
+    _fileNum(fileNum)
     {
         if (nullptr == className && nullptr == instructorName) return;
 
@@ -93,7 +94,6 @@ private:
     //......
     size_t _fileNum;
 public:
-    void *_next;
 };
 
 class Labs : protected Basic {
@@ -105,8 +105,7 @@ public:
     _Credit(Credit),
     _maxSeats(maxSeats),
     _spareSeats(spareSeats),
-    _fileNum(fileNum),
-    _next(nullptr)
+    _fileNum(fileNum)
     {
         if (nullptr == className && nullptr == instructorName) return;
 
@@ -141,7 +140,6 @@ private:
     //......
     size_t _fileNum;
 public:
-    void *_next;
 };
 
 

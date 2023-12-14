@@ -15,10 +15,10 @@ int User::getCourses(const long &offset) {
     if (nullptr == file_C) fclose(file_U);
     ERROR_CHECK(file_C, nullptr, "can not open courseInfo")
 
-    int idx = 0;
+    int idx = 0, curr = 0;
     while (true) {
         while (32 != line[idx] && '\n' != line[idx]) {
-            courseID[idx] = line[idx];
+            courseID[curr++] = line[idx];
             ++idx;
         }
 
@@ -26,6 +26,7 @@ int User::getCourses(const long &offset) {
         int ret = listLoad(courseID, file_C);
 
         if ('\n' == line[idx++]) break;
+        curr = 0;
         memset(courseID, 0, strlen(courseID));
     }
 
@@ -94,8 +95,10 @@ int User::listLoad(const char *courseID, FILE *file) {
                 if (eLesson == type) ptmp = new Lesson(tmpID, classroom, hour, classTime, type, className, instructorName, Credit, maxSeats, spareSeats, fileNum);
                 else ptmp = new Labs(tmpID, classroom, hour, classTime, type, className, instructorName, Credit, maxSeats, spareSeats, fileNum);
                 
-                if (eLesson == ((Basic *)_tail)->getType()) ((Lesson *)_tail)->_next = (void *)ptmp;
-                else ((Labs *)_tail)->_next = (void *)ptmp;
+                //if (eLesson == ((Basic *)_tail)->getType()) ((Lesson *)_tail)->_next = (void *)ptmp;
+                //else ((Labs *)_tail)->_next = (void *)ptmp;
+
+                ((Basic *)_tail)->_next = (void *)ptmp;
 
                 _tail = ptmp;
             }
@@ -122,8 +125,11 @@ void User::print() const {
         printf("no Courses information\n");
         return;
     }
+    void *ptmp = _head;
     for(int i = 0; i < _courseNum; ++i) {
-        
+        if (eLesson == ((Basic *)ptmp)->getType()) ((Lesson *)ptmp)->print();
+        else ((Labs *)ptmp)->print();
+        ptmp = (void *)((Basic *)ptmp)->_next;
     }
     return;
 }

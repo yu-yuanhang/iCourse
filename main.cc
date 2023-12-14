@@ -20,6 +20,8 @@ int main(int argc, char *argv[]) {
     int ret = 0;
 
     //......录入 courseID 编号静态数据
+
+    //......录入 教室占用信息
     
     //----------------------------用户登录
     
@@ -49,7 +51,35 @@ int main(int argc, char *argv[]) {
         free(userName);
         ret = instructor.getCourses(offset);    //录入课程列表信息
         SELF_ERROR_CHECK(ret, -1, "course list error");
+
+instructor.print();
+return 0;
         while (true) {
+            int inputs = 0;
+            printf("==========================\n");
+            printf("1.create\n");
+            printf("2.delete\n");
+            printf("3.show\n");
+            //scanf("please input : %zu", inputs);
+            cin >> inputs;
+
+            //--------------------
+
+            switch (inputs) {
+            case 1:
+                //create
+
+                break;
+            case 2:
+                //delete
+                break;
+            case 3:
+                //show
+                break;
+
+            default:
+                break;
+            }
 
         }
     } else {    //student
