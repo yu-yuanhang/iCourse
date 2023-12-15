@@ -22,8 +22,7 @@ int main(int argc, char *argv[]) {
     //......录入 courseID 编号静态数据
 
     size_t currCourseID = 0;
-    
-
+    getCourseID(currCourseID);
     
     //----------------------------用户登录
     
@@ -86,8 +85,9 @@ int main(int argc, char *argv[]) {
                 }
 
                 char classroom[BUFSIZ] = {0};
+                size_t maxSeats = 0;
                 printf("please input classroom ID : "); scanf("%s", classroom);
-                if (checkClassroom(classroom, file) != 0) {
+                if (checkClassroom(classroom, file, maxSeats) != 0) {
                     printf("Can not find this classroom\n");
                     fclose(file);
                     break;
@@ -96,20 +96,19 @@ int main(int argc, char *argv[]) {
                 size_t sort = 0;
                 printf("week : "); scanf("%zu", &week);
                 printf("sort : "); scanf("%zu", &sort);
-                if (!(week <=5 && week > 0) || !(sort <= 4 && sort > 0)) {
-                    printf("Time error\n");
-                    fclose(file);
-                    break;
-                }   
 
-                if (checkTime(week, sort, file) != 0) {
-                    printf("Time conflict\n");
+                if (ret = checkTime(week, sort, file) != 0) {
+                    if (-1 == ret) {
+                        printf("Time conflict\n");
+                    } else if (-2 == ret) {
+                        printf("Time error\n");
+                    }
                     fclose(file);
                     break;
                 }
                 
-                //......输入课程信息
-
+                //输入课程信息
+                ret = instructor.addCourse(classroom, week, sort, currCourseID, maxSeats);
                 //......更新文件
 
                 fclose(file);
@@ -120,6 +119,7 @@ int main(int argc, char *argv[]) {
                 break;
             case 3:
                 //show
+                instructor.print();
                 break;
             case 4:
                 //exit

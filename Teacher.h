@@ -43,6 +43,7 @@ public:
     }
     ~Instructor() {}
 
+    int addCourse(const char *classroom, size_t week, size_t sort, size_t &currCourseID, size_t maxSeats);
 
 public:
 protected:

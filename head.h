@@ -53,9 +53,17 @@ using std::cerr;
 int getInput(char *input, size_t length);
 int getFileLine(const char *filePath, char *line, size_t length);
 
-int checkClassroom(const char *classroom, FILE *file);
+int checkClassroom(const char *classroom, FILE *file, size_t &maxSeats);
 int checkTime(size_t week, size_t sort, FILE *file);
 
 int getCourseID(size_t &currCourseID);
+
+unsigned long string_to_ulong(char* str);
+int ulong_to_string(char *str,unsigned long num);
+
+int wbClassroom();
+int wbCourseInfo();
+int wbFilesInfo();
+int wbUserInfo();
 
 #endif
