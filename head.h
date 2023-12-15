@@ -61,9 +61,9 @@ int getCourseID(size_t &currCourseID);
 unsigned long string_to_ulong(char* str);
 int ulong_to_string(char *str,unsigned long num);
 
+int wbCourseInfo_add_course();
 int wbClassroom();
-int wbCourseInfo();
-int wbFilesInfo();
 int wbUserInfo();
+int wbFilesInfo();
 
 #endif

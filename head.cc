@@ -82,6 +82,8 @@ int checkTime(size_t week, size_t sort, FILE *file) {
 
 int getCourseID(size_t &currCourseID) {
 
+    // currCourseID 初始化为 0
+
     FILE *file = fopen(COURSEINFO, "r");
     if (file == nullptr) {
         std::cerr << "can not open file" << std::endl;
@@ -94,14 +96,20 @@ int getCourseID(size_t &currCourseID) {
 
     while (flag) {
         if (fgets(line, BUFSIZ, file) == nullptr) break;
-        line[strlen(line) - 1] = '\0';
-        currCourseID = string_to_ulong(line);
-        ++currCourseID;
+        if ('0' == line[0]) {   //有效位判断
+            for (int i = 0; i < 10; ++i) fgets(line, BUFSIZ, file);
+        } else if ('1' == line[0]) {
+            memset(line, 0, BUFSIZ);
+            fgets(line, BUFSIZ, file);
+            line[strlen(line) - 1] = '\0';
+            currCourseID = string_to_ulong(line) + 1;
         
-        for (int i = 0; i < 9; ++i) fgets(line, BUFSIZ, file);
+            for (int i = 0; i < 9; ++i) fgets(line, BUFSIZ, file);
+        } else {
+            //...
+        }
         memset(line, 0, BUFSIZ);
     }
-
     return 0;
 }
 

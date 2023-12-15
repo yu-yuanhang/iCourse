@@ -23,6 +23,7 @@ int main(int argc, char *argv[]) {
 
     size_t currCourseID = 0;
     getCourseID(currCourseID);
+//printf("currCourseID = %zu\n", currCourseID);
     
     //----------------------------用户登录
     

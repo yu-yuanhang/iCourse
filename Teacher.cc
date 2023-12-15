@@ -44,73 +44,87 @@ int User::listLoad(const char *courseID, FILE *file) {
 
     char line[BUFSIZ] = {0};
     while (fgets(line, BUFSIZ, file) != nullptr) {
-        if (0 == strncmp(line, courseID, strlen(courseID))) {
-            //加载课程信息到列表
-            size_t tmpID = strtoul(courseID, NULL, 10);//courseID
-            char classroom[CLASSEIDLENGTH + 2] = {0};//classroom
-            fgets(classroom, sizeof(classroom), file);
-            classroom[CLASSEIDLENGTH] = '\0';
-            memset(line, 0, strlen(line));
+        if ('0' == line[0]) {
+            for (int i = 0; i < 10; ++i) {
+                fgets(line, BUFSIZ, file);
+            }
+        } else if('1' == line[0]) {
+            memset(line, 0, BUFSIZ);
             fgets(line, BUFSIZ, file);
-            line[strlen(line) - 1] = '\0';
-            size_t hour = strtoul(line, NULL, 10);//hour
-            char classTime[CLASSTiMELENGTH + 2 + 1] = {0};//classtime type
-            fgets(classTime, sizeof(classTime), file);
-            classTime[CLASSTiMELENGTH + 1] = '\0';
-            ClassType type;
-            if('0' == classTime[CLASSTiMELENGTH]) type = eLesson;
-            else type = eLabs;
-            char className[BUFSIZ] = {0};//className
-            fgets(className, BUFSIZ, file);
-            className[strlen(className) - 1] = '\0';
-            char instructorName[BUFSIZ] = {0};//instructorName
-            fgets(instructorName, BUFSIZ, file);
-            instructorName[strlen(instructorName) - 1] = '\0';
-            memset(line, 0, strlen(line));
-            fgets(line, BUFSIZ, file);
-            line[strlen(line) - 1] = '\0';
-            size_t Credit = strtoul(line, NULL, 10);//Credit
-            memset(line, 0, strlen(line));
-            fgets(line, BUFSIZ, file);
-            line[strlen(line) - 1] = '\0';
-            size_t maxSeats = strtoul(line, NULL, 10);//maxSeats
-            memset(line, 0, strlen(line));
-            fgets(line, BUFSIZ, file);
-            line[strlen(line) - 1] = '\0';
-            size_t spareSeats = strtoul(line, NULL, 10);//spareSeats
-            memset(line, 0, strlen(line));
-            fgets(line, BUFSIZ, file);
-            line[strlen(line) - 1] = '\0';
-            size_t fileNum = strtoul(line, NULL, 10);//fileNum
+            if (0 == strncmp(line, courseID, strlen(courseID))) {
+                // 加载课程信息到列表
+                size_t tmpID = strtoul(courseID, NULL, 10); // courseID
+                char classroom[CLASSEIDLENGTH + 2] = {0};   // classroom
+                fgets(classroom, sizeof(classroom), file);
+                classroom[CLASSEIDLENGTH] = '\0';
+                memset(line, 0, strlen(line));
+                fgets(line, BUFSIZ, file);
+                line[strlen(line) - 1] = '\0';
+                size_t hour = strtoul(line, NULL, 10);         // hour
+                char classTime[CLASSTiMELENGTH + 2 + 1] = {0}; // classtime type
+                fgets(classTime, sizeof(classTime), file);
+                classTime[CLASSTiMELENGTH + 1] = '\0';
+                ClassType type;
+                if ('0' == classTime[CLASSTiMELENGTH]) type = eLesson;
+                else type = eLabs;
+                char className[BUFSIZ] = {0}; // className
+                fgets(className, BUFSIZ, file);
+                className[strlen(className) - 1] = '\0';
+                char instructorName[BUFSIZ] = {0}; // instructorName
+                fgets(instructorName, BUFSIZ, file);
+                instructorName[strlen(instructorName) - 1] = '\0';
+                memset(line, 0, strlen(line));
+                fgets(line, BUFSIZ, file);
+                line[strlen(line) - 1] = '\0';
+                size_t Credit = strtoul(line, NULL, 10); // Credit
+                memset(line, 0, strlen(line));
+                fgets(line, BUFSIZ, file);
+                line[strlen(line) - 1] = '\0';
+                size_t maxSeats = strtoul(line, NULL, 10); // maxSeats
+                memset(line, 0, strlen(line));
+                fgets(line, BUFSIZ, file);
+                line[strlen(line) - 1] = '\0';
+                size_t spareSeats = strtoul(line, NULL, 10); // spareSeats
+                memset(line, 0, strlen(line));
+                fgets(line, BUFSIZ, file);
+                line[strlen(line) - 1] = '\0';
+                size_t fileNum = strtoul(line, NULL, 10); // fileNum
 
-            //此处申空间但是没有进行内存初始化
-            if (nullptr == _head) {
-                //判断课程类型
-                if (eLesson == type) _head = new Lesson(tmpID, classroom, hour, classTime, type, className, instructorName, Credit, maxSeats, spareSeats, fileNum);
-                else _head = new Labs(tmpID, classroom, hour, classTime, type, className, instructorName, Credit, maxSeats, spareSeats, fileNum);
-          
-                _tail = _head;
-            } else {
-                void *ptmp = nullptr;
-                if (eLesson == type) ptmp = new Lesson(tmpID, classroom, hour, classTime, type, className, instructorName, Credit, maxSeats, spareSeats, fileNum);
-                else ptmp = new Labs(tmpID, classroom, hour, classTime, type, className, instructorName, Credit, maxSeats, spareSeats, fileNum);
-                
-                //if (eLesson == ((Basic *)_tail)->getType()) ((Lesson *)_tail)->_next = (void *)ptmp;
-                //else ((Labs *)_tail)->_next = (void *)ptmp;
+                // 此处申空间但是没有进行内存初始化
+                if (nullptr == _head) {
+                    // 判断课程类型
+                    if (eLesson == type)
+                        _head = new Lesson(tmpID, classroom, hour, classTime, type, className, instructorName, Credit, maxSeats, spareSeats, fileNum);
+                    else
+                        _head = new Labs(tmpID, classroom, hour, classTime, type, className, instructorName, Credit, maxSeats, spareSeats, fileNum);
 
-                ((Basic *)_tail)->_next = (void *)ptmp;
+                    _tail = _head;
+                } else {
+                    void *ptmp = nullptr;
+                    if (eLesson == type)
+                        ptmp = new Lesson(tmpID, classroom, hour, classTime, type, className, instructorName, Credit, maxSeats, spareSeats, fileNum);
+                    else
+                        ptmp = new Labs(tmpID, classroom, hour, classTime, type, className, instructorName, Credit, maxSeats, spareSeats, fileNum);
 
-                _tail = ptmp;
+                    // if (eLesson == ((Basic *)_tail)->getType()) ((Lesson *)_tail)->_next = (void *)ptmp;
+                    // else ((Labs *)_tail)->_next = (void *)ptmp;
+
+                    ((Basic *)_tail)->_next = (void *)ptmp;
+
+                    _tail = ptmp;
+                }
+
+                // 更新 CourseNum 信息
+                ++_courseNum;
+                break;
             }
 
-            //更新 CourseNum 信息
-            ++_courseNum;
-            break;
-        }
-        
-        for (int i = 0; i < 9; ++i) {
-            //memset(line, 0, strlen(line));
-            fgets(line, BUFSIZ, file);
+            for (int i = 0; i < 9; ++i) {
+                // memset(line, 0, strlen(line));
+                fgets(line, BUFSIZ, file);
+            }
+        } else {
+            //...
         }
         memset(line, 0, strlen(line));
     }

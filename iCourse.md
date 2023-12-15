@@ -64,6 +64,7 @@ ClassList classList
 
 
 //------------------------------------------------CourseInfo 格式
+1                           有效位
 0                           CourseID
 c101                        classroom
 36                          hour
