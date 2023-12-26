@@ -41,7 +41,7 @@ int checkClassroom(const char *classroom, FILE *file, size_t &maxSeats) {
     char line[BUFSIZ] = {0};
     while (fgets(line, BUFSIZ, file) != nullptr) {
         line[strlen(line) - 1] = '\0';
-        if (strcmp(line, classroom) == 0) {
+        if (0 == strcmp(line, classroom)) {
             memset(line, 0, BUFSIZ);
             fgets(line, BUFSIZ, file);
             line[strlen(line) - 1] = '\0';
@@ -124,9 +124,10 @@ int getUserID(const char *userName, char *ID) {
     }
 
     char line[BUFSIZ] = {0};
-    while (true) {
-        fgets(line, BUFSIZ, file);
-        if(strcmp(&(line[USERIDLENGTH]), userName)) {
+    while (nullptr != fgets(line, BUFSIZ, file)) {
+        line[strlen(line) - 1] = '\0';
+//cout << "line = " << line << endl;
+        if(0 == strcmp(&(line[USERIDLENGTH]), userName)) {
             strncpy(ID, line, USERIDLENGTH - 1);
             fclose(file);
             return 0;
