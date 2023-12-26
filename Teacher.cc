@@ -22,22 +22,21 @@ int User::getCourses() {
     if (nullptr == file_C) fclose(file_U);
     ERROR_CHECK(file_C, nullptr, "can not open courseInfo");
 
-
+//cout << "line = " << line << endl;
     int idx = 0, curr = 0;
     while (true) {
-        while (32 != line[idx] && '\n' != line[idx]) {
+        while (32 != line[idx] && '\0' != line[idx]) {
             courseID[curr++] = line[idx];
             ++idx;
         }
-
+//cout << "courseID = " << courseID << endl;
         //--------------------添加课程列表信息
         int ret = listLoad(courseID, file_C);
-
-        if ('\n' == line[idx++]) break;
+        if ('\0' == line[idx++]) break;
         curr = 0;
         memset(courseID, 0, strlen(courseID));
     }
-
+ 
     fclose(file_C);
     fclose(file_U);
     return 0;
@@ -187,8 +186,11 @@ int Instructor::addCourse(const char *classroom, size_t week, size_t sort, size_
 //printf("tmp = %d\n", tmp);
 
     char className[BUFSIZE] = {0};   //className
-    printf("class name : "); scanf("%s", className);
+    printf("class name : "); 
+    fgetc(stdin); fgets(className, BUFSIZE, stdin);
     className[BUFSIZE - 1] = '\0';
+    if ('\n' == className[strlen(className) - 1]) className[strlen(className) - 1] = '\0'; 
+//cout << "className  = " << className << endl;
     setbuf(stdin, NULL);
 
     // instructorName = _name
@@ -353,6 +355,7 @@ int User::wbUserInfo(const char *id, void *head) {
         fputs(line, file);
         tmp = (Basic *)tmp->_next;
         if (nullptr == tmp) break;
+        fputc(32, file);
     }
 
     fclose(file);

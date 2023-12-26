@@ -1,17 +1,28 @@
 #include <iostream>
 #include "./Md5.h"
 
+#define BUFSIZE (1024)
 
+using std::cout;
+using std::cin;
+using std::endl;
 
 int main () {
 
-    FILE *file = fopen("./aa", "r+");
-    char line[1024] = {0};
-    fgets(line, 1024, file);
-    fgets(line, 1024, file);
-    fgetc(file);
-    fputc('1', file);
+    char className[BUFSIZE] = {0};   //className
+    printf("class name : "); scanf("%s", className);
+    className[BUFSIZE - 1] = '\0';
+cout << "className  = " << className << endl;
+    setbuf(stdin, NULL);
 
-    fclose(file);
+    // instructorName = _name
+
+    size_t Credit;
+    printf("Ctedit : "); fgets(buffer, sizeof(buffer), stdin);
+    if (Credit > 3 || 0 == Credit) {
+        printf("Credit erro\n");
+        return -1;
+    }
+
     return 0;
 }
