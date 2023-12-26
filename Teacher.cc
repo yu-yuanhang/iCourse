@@ -1,21 +1,21 @@
 #include "./Teacher.h"
 
 int User::getCourses() {
-    char filePath[BUFSIZ] = {0};
+    char filePath[BUFSIZE] = {0};
     sprintf(filePath, "%s%s", USERINFO, this->_id);
 //cout << "filePath = " << filePath << endl;
 
     FILE *file_U = fopen(filePath, "r");
-    char line[BUFSIZ] = {0};
+    char line[BUFSIZE] = {0};
     char courseID[MINIBUFSIZE] = {0};
     //设置偏移量
-    for (int i = 0; i < 2; ++i) fgets(line, BUFSIZ, file_U);
-    memset(line, 0, BUFSIZ);
-    fgets(line, BUFSIZ, file_U);
+    for (int i = 0; i < 2; ++i) fgets(line, BUFSIZE, file_U);
+    memset(line, 0, BUFSIZE);
+    fgets(line, BUFSIZE, file_U);
 //printf("%d : %c\n", line[0], line[0]);
 
     //fseek(file_U, offset, SEEK_SET);
-    //if (fgets(line, BUFSIZ, file_U) == nullptr) {fclose(file_U);return -1;}
+    //if (fgets(line, BUFSIZE, file_U) == nullptr) {fclose(file_U);return -1;}
     if (line[0] == 0) {fclose(file_U);return 0;}
 
     FILE *file_C = fopen(COURSEINFO, "r");
@@ -50,15 +50,15 @@ int User::listLoad(const char *courseID, FILE *file) {
     //重置文件偏移量
     fseek(file, 0, SEEK_SET);
 
-    char line[BUFSIZ] = {0};
-    while (fgets(line, BUFSIZ, file) != nullptr) {
+    char line[BUFSIZE] = {0};
+    while (fgets(line, BUFSIZE, file) != nullptr) {
         if ('0' == line[0]) {
             for (int i = 0; i < 10; ++i) {
-                fgets(line, BUFSIZ, file);
+                fgets(line, BUFSIZE, file);
             }
         } else if('1' == line[0]) {
-            memset(line, 0, BUFSIZ);
-            fgets(line, BUFSIZ, file);
+            memset(line, 0, BUFSIZE);
+            fgets(line, BUFSIZE, file);
             if (0 == strncmp(line, courseID, strlen(courseID))) {
                 // 加载课程信息到列表
                 size_t tmpID = strtoul(courseID, NULL, 10); // courseID
@@ -66,7 +66,7 @@ int User::listLoad(const char *courseID, FILE *file) {
                 fgets(classroom, sizeof(classroom), file);
                 classroom[CLASSEIDLENGTH] = '\0';
                 memset(line, 0, strlen(line));
-                fgets(line, BUFSIZ, file);
+                fgets(line, BUFSIZE, file);
                 line[strlen(line) - 1] = '\0';
                 size_t hour = strtoul(line, NULL, 10);         // hour
                 char classTime[CLASSTiMELENGTH + 2 + 1] = {0}; // classtime type
@@ -75,26 +75,26 @@ int User::listLoad(const char *courseID, FILE *file) {
                 ClassType type;
                 if ('0' == classTime[CLASSTiMELENGTH]) type = eLesson;
                 else type = eLabs;
-                char className[BUFSIZ] = {0}; // className
-                fgets(className, BUFSIZ, file);
+                char className[BUFSIZE] = {0}; // className
+                fgets(className, BUFSIZE, file);
                 className[strlen(className) - 1] = '\0';
-                char instructorName[BUFSIZ] = {0}; // instructorName
-                fgets(instructorName, BUFSIZ, file);
+                char instructorName[BUFSIZE] = {0}; // instructorName
+                fgets(instructorName, BUFSIZE, file);
                 instructorName[strlen(instructorName) - 1] = '\0';
                 memset(line, 0, strlen(line));
-                fgets(line, BUFSIZ, file);
+                fgets(line, BUFSIZE, file);
                 line[strlen(line) - 1] = '\0';
                 size_t Credit = strtoul(line, NULL, 10); // Credit
                 memset(line, 0, strlen(line));
-                fgets(line, BUFSIZ, file);
+                fgets(line, BUFSIZE, file);
                 line[strlen(line) - 1] = '\0';
                 size_t maxSeats = strtoul(line, NULL, 10); // maxSeats
                 memset(line, 0, strlen(line));
-                fgets(line, BUFSIZ, file);
+                fgets(line, BUFSIZE, file);
                 line[strlen(line) - 1] = '\0';
                 size_t spareSeats = strtoul(line, NULL, 10); // spareSeats
                 memset(line, 0, strlen(line));
-                fgets(line, BUFSIZ, file);
+                fgets(line, BUFSIZE, file);
                 line[strlen(line) - 1] = '\0';
                 size_t fileNum = strtoul(line, NULL, 10); // fileNum
 
@@ -129,7 +129,7 @@ int User::listLoad(const char *courseID, FILE *file) {
 
             for (int i = 0; i < 9; ++i) {
                 // memset(line, 0, strlen(line));
-                fgets(line, BUFSIZ, file);
+                fgets(line, BUFSIZE, file);
             }
         } else {
             //...
@@ -186,9 +186,9 @@ int Instructor::addCourse(const char *classroom, size_t week, size_t sort, size_
     }
 //printf("tmp = %d\n", tmp);
 
-    char className[BUFSIZ] = {0};   //className
+    char className[BUFSIZE] = {0};   //className
     printf("class name : "); scanf("%s", className);
-    className[BUFSIZ - 1] = '\0';
+    className[BUFSIZE - 1] = '\0';
     setbuf(stdin, NULL);
 
     // instructorName = _name
@@ -242,16 +242,16 @@ int User::wbCourseInfo_add_course(const void *tail) {
     //    return -1;
     //}
 
-    char str[BUFSIZ] = {0};
+    char str[BUFSIZE] = {0};
 
     fputs("\n1", file); //有效位
     ulong_to_string(str, ((Basic *)tail)->_courseID);  //CourseID
     fprintf(file, "\n%s", str);
-    memset(str, 0, BUFSIZ);
+    memset(str, 0, BUFSIZE);
     fprintf(file, "\n%s", ((Basic *)tail)->_classroom);    //classroom
     ulong_to_string(str, ((Basic *)tail)->_hour);  //hour
     fprintf(file, "\n%s", str);
-    memset(str, 0, BUFSIZ);
+    memset(str, 0, BUFSIZE);
     fprintf(file, "\n%s", ((Basic *)tail)->_classTime);    //classTime
     if (eLesson == ((Basic *)tail)->_classType) {
         fputs("0", file);  //classType
@@ -260,16 +260,16 @@ int User::wbCourseInfo_add_course(const void *tail) {
         fprintf(file, "\n%s", ((Lesson *)tail)->_instructorName);
         ulong_to_string(str, ((Lesson *)tail)->_Credit);
         fprintf(file, "\n%s", str);
-        memset(str, 0, BUFSIZ);
+        memset(str, 0, BUFSIZE);
         ulong_to_string(str, ((Lesson *)tail)->_maxSeats);
         fprintf(file, "\n%s", str);
-        memset(str, 0, BUFSIZ);
+        memset(str, 0, BUFSIZE);
         ulong_to_string(str, ((Lesson *)tail)->_spareSeats);
         fprintf(file, "\n%s", str);
-        memset(str, 0, BUFSIZ);
+        memset(str, 0, BUFSIZE);
         ulong_to_string(str, ((Lesson *)tail)->_fileNum);
         fprintf(file, "\n%s", str);
-        memset(str, 0, BUFSIZ);
+        memset(str, 0, BUFSIZE);
     }
     else {
         fputs("1", file);
@@ -278,16 +278,16 @@ int User::wbCourseInfo_add_course(const void *tail) {
         fprintf(file, "\n%s", ((Labs *)tail)->_instructorName);
         ulong_to_string(str, ((Labs *)tail)->_Credit);
         fprintf(file, "\n%s", str);
-        memset(str, 0, BUFSIZ);
+        memset(str, 0, BUFSIZE);
         ulong_to_string(str, ((Labs *)tail)->_maxSeats);
         fprintf(file, "\n%s", str);
-        memset(str, 0, BUFSIZ);
+        memset(str, 0, BUFSIZE);
         ulong_to_string(str, ((Labs *)tail)->_spareSeats);
         fprintf(file, "\n%s", str);
-        memset(str, 0, BUFSIZ);
+        memset(str, 0, BUFSIZE);
         ulong_to_string(str, ((Labs *)tail)->_fileNum);
         fprintf(file, "\n%s", str);
-        memset(str, 0, BUFSIZ);
+        memset(str, 0, BUFSIZE);
     }
     
     fclose(file);
@@ -301,16 +301,16 @@ int User::wbClassroom(const char *classroom, const char *time, char value) {
     FILE *file = fopen(CLASSROOM, "r+");
     ERROR_CHECK(file, nullptr, "Classroom open error");
 
-    char line[BUFSIZ] = {0};
-    while (nullptr != fgets(line, BUFSIZ, file)) {
+    char line[BUFSIZE] = {0};
+    while (nullptr != fgets(line, BUFSIZE, file)) {
         line[strlen(line) - 1] = '\0';
         if (0 == strcmp(line, classroom)) {
-            fgets(line, BUFSIZ, file);
-            memset(line, 0, BUFSIZ);
+            fgets(line, BUFSIZE, file);
+            memset(line, 0, BUFSIZE);
             line[0] = time[0];
             size_t sort = string_to_ulong(line);
-            for (int i = 0; i < sort; ++i) fgets(line, BUFSIZ, file);
-            memset(line, 0, BUFSIZ);
+            for (int i = 0; i < sort; ++i) fgets(line, BUFSIZE, file);
+            memset(line, 0, BUFSIZE);
 
             line[0] = time[1];
             sort = string_to_ulong(line);
@@ -330,14 +330,14 @@ int User::wbClassroom(const char *classroom, const char *time, char value) {
 int User::wbUserInfo(const char *id, void *head) {
     if (nullptr == id) return -1;
 
-    char filePath[BUFSIZ] = {0};
+    char filePath[BUFSIZE] = {0};
     sprintf(filePath, "%s%s", USERINFO, id);
     FILE *file = fopen(filePath, "r+");
     
-    char line[BUFSIZ] = {0};
-    fgets(line, BUFSIZ, file);
-    fgets(line, BUFSIZ, file);
-    memset(line, 0, BUFSIZ);
+    char line[BUFSIZE] = {0};
+    fgets(line, BUFSIZE, file);
+    fgets(line, BUFSIZE, file);
+    memset(line, 0, BUFSIZE);
 
     size_t pos = ftell(file);
     ftruncate(fileno(file), pos);

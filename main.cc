@@ -30,10 +30,10 @@ int main(int argc, char *argv[]) {
     bool isTeacher = 0;
 
     cout << "input user name : ";
-    //char userName[BUFSIZ] = {0};
-    char *userName = (char *)malloc(BUFSIZ * sizeof(char));
-    memset(userName, 0, BUFSIZ);
-    ret = getInput(userName, BUFSIZ);
+    //char userName[BUFSIZE] = {0};
+    char *userName = (char *)malloc(BUFSIZE * sizeof(char));
+    memset(userName, 0, BUFSIZE);
+    ret = getInput(userName, BUFSIZE);
     if (-1 == ret) free(userName);
     SELF_ERROR_CHECK(ret, -1, "input error");
 
@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
                 //return -1;
                 //}
 
-                char classroom[BUFSIZ] = {0};
+                char classroom[BUFSIZE] = {0};
                 size_t maxSeats = 0;
                 printf("please input classroom ID : "); scanf("%s", classroom);
                 if (checkClassroom(classroom, file, maxSeats) != 0) {
