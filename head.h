@@ -66,9 +66,5 @@ int getUserID(const char *userName, char *ID);
 unsigned long string_to_ulong(char* str);
 int ulong_to_string(char *str,unsigned long num);
 
-int wbCourseInfo_add_course(const void *courseInfo);
-int wbClassroom();
-int wbUserInfo();
-int wbFilesInfo();
 
 #endif

@@ -31,6 +31,9 @@ public:
     void print() const;
     //---------------------------------------------------------
     static int wbCourseInfo_add_course(const void *tail);
+    static int wbClassroom(const char *classroom, const char *time, char value);
+    static int wbUserInfo(const char *id, void *head);
+    static int wbFilesInfo();
     //---------------------------------------------------------
 public:
     char *_name;

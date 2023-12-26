@@ -230,14 +230,17 @@ int Instructor::addCourse(const char *classroom, size_t week, size_t sort, size_
     return 0;
 }
 
+//================================================================
+
 int User::wbCourseInfo_add_course(const void *tail) {
     if (nullptr == tail) return -1;
 
     FILE *file = fopen(COURSEINFO, "a+");
-    if (nullptr == file) {
-        printf("CourseInfo open error\n");
-        return -1;
-    }
+    ERROR_CHECK(file, nullptr, "CourseInfo open error");
+    //if (nullptr == file) {
+    //    printf("CourseInfo open error\n");
+    //    return -1;
+    //}
 
     char str[BUFSIZ] = {0};
 
@@ -289,5 +292,69 @@ int User::wbCourseInfo_add_course(const void *tail) {
     
     fclose(file);
 
+    return 0;
+}
+
+int User::wbClassroom(const char *classroom, const char *time, char value) {
+    if (nullptr == classroom || nullptr == time) return -1;
+
+    FILE *file = fopen(CLASSROOM, "r+");
+    ERROR_CHECK(file, nullptr, "Classroom open error");
+
+    char line[BUFSIZ] = {0};
+    while (nullptr != fgets(line, BUFSIZ, file)) {
+        line[strlen(line) - 1] = '\0';
+        if (0 == strcmp(line, classroom)) {
+            fgets(line, BUFSIZ, file);
+            memset(line, 0, BUFSIZ);
+            line[0] = time[0];
+            size_t sort = string_to_ulong(line);
+            for (int i = 0; i < sort; ++i) fgets(line, BUFSIZ, file);
+            memset(line, 0, BUFSIZ);
+
+            line[0] = time[1];
+            sort = string_to_ulong(line);
+            for (int i = 0; i < sort; ++i) fgetc(file);
+            fputc(value, file);
+
+            fclose(file);
+            return 0;
+        }
+    }
+
+    printf("classroom error\n");
+    fclose(file);
+    return -1;
+}
+
+int User::wbUserInfo(const char *id, void *head) {
+    if (nullptr == id) return -1;
+
+    char filePath[BUFSIZ] = {0};
+    sprintf(filePath, "%s%s", USERINFO, id);
+    FILE *file = fopen(filePath, "r+");
+    
+    char line[BUFSIZ] = {0};
+    fgets(line, BUFSIZ, file);
+    fgets(line, BUFSIZ, file);
+    memset(line, 0, BUFSIZ);
+
+    size_t pos = ftell(file);
+    ftruncate(fileno(file), pos);
+
+    if (nullptr == head) {
+        fclose(file);
+        return 0;
+    }
+
+    Basic *tmp = (Basic *)head;
+    while (true) {
+        ulong_to_string(line, tmp->_courseID);
+        fputs(line, file);
+        tmp = (Basic *)tmp->_next;
+        if (nullptr == tmp) break;
+    }
+
+    fclose(file);
     return 0;
 }

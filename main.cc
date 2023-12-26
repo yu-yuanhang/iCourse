@@ -79,10 +79,11 @@ int main(int argc, char *argv[]) {
                 //输入教室和时间 判断是否冲突
 
                 FILE *file = fopen(CLASSROOM, "r");
-                if (file == nullptr) {
-                cerr << "can not open file" << endl;
-                return -1;
-                }
+                ERROR_CHECK(file, nullptr, "can not open file")
+                //if (file == nullptr) {
+                //cerr << "can not open file" << endl;
+                //return -1;
+                //}
 
                 char classroom[BUFSIZ] = {0};
                 size_t maxSeats = 0;
@@ -113,11 +114,10 @@ int main(int argc, char *argv[]) {
                 //......更新文件
                 //CourseInfo
                 User::wbCourseInfo_add_course(instructor._tail);
-
-                //UserInfo
+                //UserInfo 
+                User::wbUserInfo(instructor._id, instructor._head);
                 //Classroom
-
-
+                User::wbClassroom(((Basic *)instructor._tail)->_classroom, ((Basic *)instructor._tail)->_classTime, '1');
                 fclose(file);
             }
                 break;
