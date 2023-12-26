@@ -39,7 +39,7 @@ public:
     void *_next;
     static size_t _currentID;//初始化为 0
 
-protected:
+//protected:
     size_t _courseID;
     char _classroom[CLASSEIDLENGTH + 1];
     size_t _hour;
@@ -82,8 +82,9 @@ public:
 protected:
     int getClassInfo () override;
 
-protected:
-private:
+public:
+//protected:
+//private:
     char *_className;
     char *_instructorName;
     size_t _Credit;
@@ -93,7 +94,7 @@ private:
     //课程大纲 课件
     //......
     size_t _fileNum;
-public:
+
 };
 
 class Labs : protected Basic {
@@ -127,9 +128,10 @@ public:
 
 protected:
     int getClassInfo () override;
-    
-protected:
-private:
+
+public:    
+//protected:
+//private:
     char *_className;
     char *_instructorName;
     size_t _Credit;
@@ -139,7 +141,7 @@ private:
     //课程大纲 课件
     //......
     size_t _fileNum;
-public:
+
 };
 
 

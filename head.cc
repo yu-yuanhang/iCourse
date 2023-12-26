@@ -113,11 +113,77 @@ int getCourseID(size_t &currCourseID) {
     return 0;
 }
 
+//=============================================================
+
 unsigned long string_to_ulong(char* str) {
     return strtoul(str, NULL, 10);
 }
 
 int ulong_to_string(char *str,unsigned long num) {
     sprintf(str, "%lu", num);
+    return 0;
+}
+
+//=============================================================
+
+int wbCourseInfo_add_course(void * const courseInfo) {
+    if (nullptr == courseInfo) return -1;
+
+    FILE *file = fopen(COURSEINFO, "a+");
+    if (nullptr == file) {
+        printf("CourseInfo open error\n");
+        return -1;
+    }
+
+    char str[BUFSIZ] = {0};
+
+    fputs("\n1", file); //有效位
+    ulong_to_string(str, ((Basic *)courseInfo)._courseID);  //CourseID
+    fprintf(file, "\n%s", str);
+    memset(str, 0, BUFSIZ);
+    fprintf(file, "\n%s", ((Basic *)courseInfo)._classroom);    //classroom
+    ulong_to_string(str, ((Basic *)courseInfo)._hour);  //hour
+    fprintf(file, "\n%s", str);
+    memset(str, 0, BUFSIZ);
+    fprintf(file, "\n%s", ((Basic *)courseInfo)._classTime);    //classTime
+    if (eLesson == ((Basic *)courseInfo)._classType) {
+        fputs("0", file);  //classType
+
+        fprintf(file, "\n%s", ((Lesson *)courseInfo)._className);
+        fprintf(file, "\n%s", ((Lesson *)courseInfo)._instructorName);
+        ulong_to_string(str, ((Lesson *)courseInfo)._Credit);
+        fprintf(file, "\n%s", str);
+        memset(str, 0, BUFSIZ);
+        ulong_to_string(str, ((Lesson *)courseInfo)._maxSeats);
+        fprintf(file, "\n%s", str);
+        memset(str, 0, BUFSIZ);
+        ulong_to_string(str, ((Lesson *)courseInfo)._spareSeats);
+        fprintf(file, "\n%s", str);
+        memset(str, 0, BUFSIZ);
+        ulong_to_string(str, ((Lesson *)courseInfo)._fileNum);
+        fprintf(file, "\n%s", str);
+        memset(str, 0, BUFSIZ);
+    }
+    else {
+        fputs("1", file);
+
+        fprintf(file, "\n%s", ((Labs *)courseInfo)._className);
+        fprintf(file, "\n%s", ((Labs *)courseInfo)._instructorName);
+        ulong_to_string(str, ((Labs *)courseInfo)._Credit);
+        fprintf(file, "\n%s", str);
+        memset(str, 0, BUFSIZ);
+        ulong_to_string(str, ((Labs *)courseInfo)._maxSeats);
+        fprintf(file, "\n%s", str);
+        memset(str, 0, BUFSIZ);
+        ulong_to_string(str, ((Labs *)courseInfo)._spareSeats);
+        fprintf(file, "\n%s", str);
+        memset(str, 0, BUFSIZ);
+        ulong_to_string(str, ((Labs *)courseInfo)._fileNum);
+        fprintf(file, "\n%s", str);
+        memset(str, 0, BUFSIZ);
+    }
+    
+    fclose(file);
+
     return 0;
 }
