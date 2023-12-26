@@ -38,13 +38,12 @@ int main(int argc, char *argv[]) {
     SELF_ERROR_CHECK(ret, -1, "input error");
 
     cout << "intput passwd : ";
-    long offset = 0;
-    ret = keyVerification(userName, offset, isTeacher);
+    ret = keyVerification(userName, isTeacher);
     if (-1 == ret) free(userName);
     SELF_ERROR_CHECK(ret, -1, "user name or passwd error");
 
-    //cout << isTeacher << endl;
-    //cout << offset << endl;  
+//cout << isTeacher << endl;
+ 
     
     //----------------------------
     
@@ -52,7 +51,7 @@ int main(int argc, char *argv[]) {
     if (isTeacher) {    //teacher
         Instructor instructor(userName);
         free(userName);
-        ret = instructor.getCourses(offset);    //录入课程列表信息
+        ret = instructor.getCourses();    //录入课程列表信息
         SELF_ERROR_CHECK(ret, -1, "course list error");
 
 //instructor.print();
@@ -110,7 +109,14 @@ int main(int argc, char *argv[]) {
                 
                 //输入课程信息
                 ret = instructor.addCourse(classroom, week, sort, currCourseID, maxSeats);
+            
                 //......更新文件
+                //CourseInfo
+                User::wbCourseInfo_add_course(instructor._tail);
+
+                //UserInfo
+                //Classroom
+
 
                 fclose(file);
             }

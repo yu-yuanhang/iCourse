@@ -159,7 +159,7 @@ void MD5Transform(unsigned int state[4],unsigned char block[64])
      state[3] += d;
 }
 
-int keyVerification(const char *userName, long &offset, bool &isTeacher) {
+int keyVerification(const char *userName, bool &isTeacher) {
 
 //malloc fopen
 
@@ -193,10 +193,32 @@ int keyVerification(const char *userName, long &offset, bool &isTeacher) {
     //printf("md5:%s\n",decrypt32);
 
     //------------------------------验证操作
-    FILE *file = fopen(USERINFO, "r");
+    
+    char ID[USERIDLENGTH] = {0};
+    ret = getUserID(userName, ID);
+    SELF_ERROR_CHECK(ret, -1, "");
+
+    char filePath[BUFSIZ] = {0};
+    sprintf(filePath, "%s%s", USERINFO, ID);
+    FILE *file = fopen(filePath, "r");
     ERROR_CHECK(file, nullptr, "can not open file");
 
     char line[BUFSIZ] = {0};
+
+    fgets(line, BUFSIZ, file);
+    if ('1' == *line) isTeacher = 1;
+    else isTeacher = 0;
+    memset(line, 0, sizeof(line));
+
+    fgets(line, BUFSIZ, file);
+    if(0 != strncmp(line, (char *)decrypt32, strlen((char *)decrypt32))) ret = -1;
+    else ret = 0;
+
+    fclose(file);
+    return ret;
+
+
+    /*
     while (true) {
         if (fgets(line, BUFSIZ, file) != nullptr) {
             //cout << line << endl;
@@ -215,7 +237,7 @@ int keyVerification(const char *userName, long &offset, bool &isTeacher) {
                 //--------------------------------------------
                 if(0 == strncmp(line, (char *)decrypt32, strlen((char *)decrypt32))) {
                     //获取用户文件中偏移量
-                    offset = ftell(file);
+                    //offset = ftell(file);
                     fclose(file);
                     ERROR_CHECK(offset, -1, "offset error");
                     return 0;
@@ -231,6 +253,7 @@ int keyVerification(const char *userName, long &offset, bool &isTeacher) {
         }
         memset(line, 0, sizeof(line));
     }
+    */
 
     //fclose(file);
     //free(plaintext);

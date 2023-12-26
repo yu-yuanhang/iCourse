@@ -14,6 +14,8 @@ public:
         _name = (char *)malloc((strlen(name) + 1) * sizeof(char));
         memset(_name, 0, strlen(name) + 1);
         strncpy(_name, name, strlen(name));
+        //录入 ID信息
+        getUserID(_name, _id);
     }
     ~User() {
         //释放 Course List 资源
@@ -23,17 +25,19 @@ public:
     }
 
 public:
-    int getCourses(const long &offset);
+    int getCourses();
     int listLoad(const char *courseID, FILE *file);
     
     void print() const;
-
-protected:
+    //---------------------------------------------------------
+    static int wbCourseInfo_add_course(const void *tail);
+    //---------------------------------------------------------
+public:
     char *_name;
     size_t _courseNum;
     void *_head;
     void *_tail;
-
+    char _id[USERIDLENGTH] ={0};
 };
 
 class Instructor : public User {

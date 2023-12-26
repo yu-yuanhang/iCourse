@@ -14,12 +14,14 @@ using std::cin;
 using std::endl;
 using std::cerr;
 
-#define CLASSROOM "./Resourse/classroom"
-#define COURSEINFO "./Resourse/courseInfo"
-#define USERINFO "./Resourse/UserInfo"
+#define CLASSROOM "./Resourse/Classroom"
+#define COURSEINFO "./Resourse/CourseInfo"
+#define USERINFO "./Resourse/User/"
+#define USERIDINFO "./Resourse/UserInfo"
 
 #define BUFSIZE (1024)
 #define MINIBUFSIZE (128)
+#define USERIDLENGTH ((3) + (1))
 
 /* #define ARGC_CHECK(argc, num) {\ */
 /*     if(argc != num) {\ */
@@ -57,11 +59,14 @@ int checkClassroom(const char *classroom, FILE *file, size_t &maxSeats);
 int checkTime(size_t week, size_t sort, FILE *file);
 
 int getCourseID(size_t &currCourseID);
+int getUserID(const char *userName, char *ID);
+
+//==================================================================
 
 unsigned long string_to_ulong(char* str);
 int ulong_to_string(char *str,unsigned long num);
 
-int wbCourseInfo_add_course(void * const courseInfo);
+int wbCourseInfo_add_course(const void *courseInfo);
 int wbClassroom();
 int wbUserInfo();
 int wbFilesInfo();

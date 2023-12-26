@@ -1,19 +1,27 @@
 #include "./Teacher.h"
 
-int User::getCourses(const long &offset) {
-    FILE *file_U = fopen(USERINFO, "r");
-    ERROR_CHECK(file_U, nullptr, "can not open userInfo");
+int User::getCourses() {
+    char filePath[BUFSIZ] = {0};
+    sprintf(filePath, "%s%s", USERINFO, this->_id);
+//cout << "filePath = " << filePath << endl;
 
+    FILE *file_U = fopen(filePath, "r");
     char line[BUFSIZ] = {0};
     char courseID[MINIBUFSIZE] = {0};
     //设置偏移量
-    fseek(file_U, offset, SEEK_SET);
-    if (fgets(line, BUFSIZ, file_U) == nullptr) {fclose(file_U);return -1;}
-    if (line[0] == '\n') {fclose(file_U);return 0;}
+    for (int i = 0; i < 2; ++i) fgets(line, BUFSIZ, file_U);
+    memset(line, 0, BUFSIZ);
+    fgets(line, BUFSIZ, file_U);
+//printf("%d : %c\n", line[0], line[0]);
+
+    //fseek(file_U, offset, SEEK_SET);
+    //if (fgets(line, BUFSIZ, file_U) == nullptr) {fclose(file_U);return -1;}
+    if (line[0] == 0) {fclose(file_U);return 0;}
 
     FILE *file_C = fopen(COURSEINFO, "r");
     if (nullptr == file_C) fclose(file_U);
-    ERROR_CHECK(file_C, nullptr, "can not open courseInfo")
+    ERROR_CHECK(file_C, nullptr, "can not open courseInfo");
+
 
     int idx = 0, curr = 0;
     while (true) {
@@ -218,6 +226,68 @@ int Instructor::addCourse(const char *classroom, size_t week, size_t sort, size_
     //更新 CourseNum 信息
     ++_courseNum;
     ++currCourseID;
+
+    return 0;
+}
+
+int User::wbCourseInfo_add_course(const void *tail) {
+    if (nullptr == tail) return -1;
+
+    FILE *file = fopen(COURSEINFO, "a+");
+    if (nullptr == file) {
+        printf("CourseInfo open error\n");
+        return -1;
+    }
+
+    char str[BUFSIZ] = {0};
+
+    fputs("\n1", file); //有效位
+    ulong_to_string(str, ((Basic *)tail)->_courseID);  //CourseID
+    fprintf(file, "\n%s", str);
+    memset(str, 0, BUFSIZ);
+    fprintf(file, "\n%s", ((Basic *)tail)->_classroom);    //classroom
+    ulong_to_string(str, ((Basic *)tail)->_hour);  //hour
+    fprintf(file, "\n%s", str);
+    memset(str, 0, BUFSIZ);
+    fprintf(file, "\n%s", ((Basic *)tail)->_classTime);    //classTime
+    if (eLesson == ((Basic *)tail)->_classType) {
+        fputs("0", file);  //classType
+
+        fprintf(file, "\n%s", ((Lesson *)tail)->_className);
+        fprintf(file, "\n%s", ((Lesson *)tail)->_instructorName);
+        ulong_to_string(str, ((Lesson *)tail)->_Credit);
+        fprintf(file, "\n%s", str);
+        memset(str, 0, BUFSIZ);
+        ulong_to_string(str, ((Lesson *)tail)->_maxSeats);
+        fprintf(file, "\n%s", str);
+        memset(str, 0, BUFSIZ);
+        ulong_to_string(str, ((Lesson *)tail)->_spareSeats);
+        fprintf(file, "\n%s", str);
+        memset(str, 0, BUFSIZ);
+        ulong_to_string(str, ((Lesson *)tail)->_fileNum);
+        fprintf(file, "\n%s", str);
+        memset(str, 0, BUFSIZ);
+    }
+    else {
+        fputs("1", file);
+
+        fprintf(file, "\n%s", ((Labs *)tail)->_className);
+        fprintf(file, "\n%s", ((Labs *)tail)->_instructorName);
+        ulong_to_string(str, ((Labs *)tail)->_Credit);
+        fprintf(file, "\n%s", str);
+        memset(str, 0, BUFSIZ);
+        ulong_to_string(str, ((Labs *)tail)->_maxSeats);
+        fprintf(file, "\n%s", str);
+        memset(str, 0, BUFSIZ);
+        ulong_to_string(str, ((Labs *)tail)->_spareSeats);
+        fprintf(file, "\n%s", str);
+        memset(str, 0, BUFSIZ);
+        ulong_to_string(str, ((Labs *)tail)->_fileNum);
+        fprintf(file, "\n%s", str);
+        memset(str, 0, BUFSIZ);
+    }
+    
+    fclose(file);
 
     return 0;
 }
