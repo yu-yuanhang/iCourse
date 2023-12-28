@@ -121,3 +121,8 @@ int ulong_to_string(char *str,unsigned long num) {
     sprintf(str, "%lu", num);
     return 0;
 }
+
+int wbCourseInfo_add_course(void *courseInfo) {
+
+
+}
