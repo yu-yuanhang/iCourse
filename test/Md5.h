@@ -1,7 +1,14 @@
 #ifndef MD5_H
 #define MD5_H
 
-#include "./head.h"
+#include <iostream>
+#include <stdio.h>
+#include <memory.h>
+#include <iostream>
+#include <fstream>
+#include <unistd.h>
+#include <string>
+
  
 typedef struct
 {
@@ -47,6 +54,6 @@ void MD5Transform(unsigned int state[4],unsigned char block[64]);
 void MD5Encode(unsigned char *output,unsigned int *input,unsigned int len);
 void MD5Decode(unsigned int *output,unsigned char *input,unsigned int len);
 
-int keyVerification(const char *username, bool &isTeacher);
+int keyVerification(const char *username);
  
 #endif

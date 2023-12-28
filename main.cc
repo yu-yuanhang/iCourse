@@ -30,21 +30,20 @@ int main(int argc, char *argv[]) {
     bool isTeacher = 0;
 
     cout << "input user name : ";
-    //char userName[BUFSIZ] = {0};
-    char *userName = (char *)malloc(BUFSIZ * sizeof(char));
-    memset(userName, 0, BUFSIZ);
-    ret = getInput(userName, BUFSIZ);
+    //char userName[BUFSIZE] = {0};
+    char *userName = (char *)malloc(BUFSIZE * sizeof(char));
+    memset(userName, 0, BUFSIZE);
+    ret = getInput(userName, BUFSIZE);
     if (-1 == ret) free(userName);
     SELF_ERROR_CHECK(ret, -1, "input error");
 
     cout << "intput passwd : ";
-    long offset = 0;
-    ret = keyVerification(userName, offset, isTeacher);
+    ret = keyVerification(userName, isTeacher);
     if (-1 == ret) free(userName);
     SELF_ERROR_CHECK(ret, -1, "user name or passwd error");
 
-    //cout << isTeacher << endl;
-    //cout << offset << endl;  
+//cout << isTeacher << endl;
+ 
     
     //----------------------------
     
@@ -52,7 +51,7 @@ int main(int argc, char *argv[]) {
     if (isTeacher) {    //teacher
         Instructor instructor(userName);
         free(userName);
-        ret = instructor.getCourses(offset);    //录入课程列表信息
+        ret = instructor.getCourses();    //录入课程列表信息
         SELF_ERROR_CHECK(ret, -1, "course list error");
 
 //instructor.print();
@@ -80,12 +79,13 @@ int main(int argc, char *argv[]) {
                 //输入教室和时间 判断是否冲突
 
                 FILE *file = fopen(CLASSROOM, "r");
-                if (file == nullptr) {
-                cerr << "can not open file" << endl;
-                return -1;
-                }
+                ERROR_CHECK(file, nullptr, "can not open file")
+                //if (file == nullptr) {
+                //cerr << "can not open file" << endl;
+                //return -1;
+                //}
 
-                char classroom[BUFSIZ] = {0};
+                char classroom[BUFSIZE] = {0};
                 size_t maxSeats = 0;
                 printf("please input classroom ID : "); scanf("%s", classroom);
                 if (checkClassroom(classroom, file, maxSeats) != 0) {
@@ -110,8 +110,14 @@ int main(int argc, char *argv[]) {
                 
                 //输入课程信息
                 ret = instructor.addCourse(classroom, week, sort, currCourseID, maxSeats);
+            
                 //......更新文件
-
+                //CourseInfo
+                User::wbCourseInfo_add_course(instructor._tail);
+                //UserInfo 
+                User::wbUserInfo(instructor._id, instructor._head);
+                //Classroom
+                User::wbClassroom(((Basic *)instructor._tail)->_classroom, ((Basic *)instructor._tail)->_classTime, '1');
                 fclose(file);
             }
                 break;

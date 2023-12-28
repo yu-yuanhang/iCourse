@@ -159,15 +159,14 @@ void MD5Transform(unsigned int state[4],unsigned char block[64])
      state[3] += d;
 }
 
-int keyVerification(const char *userName, bool &isTeacher) {
+int keyVerification(const char *userName) {
+
+//malloc fopen
 
     if (nullptr == userName) return -1;
 
     char plaintext[BUFSIZ] = {0};
-    int ret = getInput(plaintext, BUFSIZ);
-//cout << "plaintext = " << plaintext << endl;
-
-    SELF_ERROR_CHECK(ret, -1, "input error");
+    strncpy(plaintext, userName, strlen(userName));
 
     int read_len;
     int i;
@@ -190,74 +189,7 @@ int keyVerification(const char *userName, bool &isTeacher) {
         sprintf(temp,"%02x",decrypt[i]);
         strcat((char *)decrypt32,temp);
     }
-//printf("md5:%s\n",decrypt32);
+    printf("md5:%s\n",decrypt32);
 
-    //------------------------------验证操作
-    
-    char ID[USERIDLENGTH] = {0};
-    ret = getUserID(userName, ID);
-    SELF_ERROR_CHECK(ret, -1, "");
-cout << "ID = " << ID << endl;
-
-    char filePath[BUFSIZ] = {0};
-    sprintf(filePath, "%s%s", USERINFO, ID);
-    FILE *file = fopen(filePath, "r");
-    ERROR_CHECK(file, nullptr, "can not open file");
-
-    char line[BUFSIZ] = {0};
-
-    fgets(line, BUFSIZ, file);
-    if ('1' == *line) isTeacher = 1;
-    else isTeacher = 0;
-    memset(line, 0, strlen(line));
-
-    fgets(line, BUFSIZ, file);
-    line[strlen(line) - 1] = '\0';
-    if(0 != strcmp(line, (char *)decrypt32)) ret = -1;
-    else ret = 0;
-
-    fclose(file);
-    return ret;
-
-
-    /*
-    while (true) {
-        if (fgets(line, BUFSIZ, file) != nullptr) {
-            //cout << line << endl;
-            if(0 == strncmp(line, userName, strlen(userName))) {
-                //cout << line << endl;
-                //fseek(file, 2, SEEK_CUR);
-                //获取用户类型
-                memset(line, 0, sizeof(line));
-                fgets(line, BUFSIZ, file);
-                if ('1' == *line) isTeacher = 1;
-                else isTeacher = 0; 
-
-                memset(line, 0, sizeof(line));
-                fgets(line, BUFSIZ, file);
-            
-                //--------------------------------------------
-                if(0 == strncmp(line, (char *)decrypt32, strlen((char *)decrypt32))) {
-                    //获取用户文件中偏移量
-                    //offset = ftell(file);
-                    fclose(file);
-                    ERROR_CHECK(offset, -1, "offset error");
-                    return 0;
-                }
-            }
-            fseek(file, 35, SEEK_CUR);
-            memset(line, 0, sizeof(line));
-            fgets(line, BUFSIZ, file);
-            //cout << line << endl;
-        } else {
-            fclose(file);
-            return -1;
-        }
-        memset(line, 0, sizeof(line));
-    }
-    */
-
-    //fclose(file);
-    //free(plaintext);
-    //return -1;
+    return 0;
 }

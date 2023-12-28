@@ -38,19 +38,19 @@ int checkClassroom(const char *classroom, FILE *file, size_t &maxSeats) {
 
     if (nullptr == classroom && nullptr == file) return -1;
 
-    char line[BUFSIZ] = {0};
-    while (fgets(line, BUFSIZ, file) != nullptr) {
+    char line[BUFSIZE] = {0};
+    while (fgets(line, BUFSIZE, file) != nullptr) {
         line[strlen(line) - 1] = '\0';
-        if (strcmp(line, classroom) == 0) {
-            memset(line, 0, BUFSIZ);
-            fgets(line, BUFSIZ, file);
+        if (0 == strcmp(line, classroom)) {
+            memset(line, 0, BUFSIZE);
+            fgets(line, BUFSIZE, file);
             line[strlen(line) - 1] = '\0';
             maxSeats = string_to_ulong(line);
             return 0;
         }
 
-        for(int i = 0; i < 6; ++i) fgets(line, BUFSIZ, file);
-        memset(line, 0, BUFSIZ);
+        for(int i = 0; i < 6; ++i) fgets(line, BUFSIZE, file);
+        memset(line, 0, BUFSIZE);
     }
 
     return -1;
@@ -65,12 +65,12 @@ int checkTime(size_t week, size_t sort, FILE *file) {
         return -2;
     }   
 
-    char line[BUFSIZ] = {0};
+    char line[BUFSIZE] = {0};
     for(int i = 0; i < week - 1; ++i) {
-        fgets(line, BUFSIZ, file);
+        fgets(line, BUFSIZE, file);
     }
-    memset(line, 0, BUFSIZ);
-    fgets(line, BUFSIZ, file);
+    memset(line, 0, BUFSIZE);
+    fgets(line, BUFSIZE, file);
 
 //printf("%s\n", line);
 
@@ -90,28 +90,55 @@ int getCourseID(size_t &currCourseID) {
         return -1;
     }
 
-    char line[BUFSIZ] = {0};
+    char line[BUFSIZE] = {0};
 
     bool flag = true;
 
     while (flag) {
-        if (fgets(line, BUFSIZ, file) == nullptr) break;
+        if (fgets(line, BUFSIZE, file) == nullptr) break;
         if ('0' == line[0]) {   //有效位判断
-            for (int i = 0; i < 10; ++i) fgets(line, BUFSIZ, file);
+            for (int i = 0; i < 10; ++i) fgets(line, BUFSIZE, file);
         } else if ('1' == line[0]) {
-            memset(line, 0, BUFSIZ);
-            fgets(line, BUFSIZ, file);
+            memset(line, 0, BUFSIZE);
+            fgets(line, BUFSIZE, file);
             line[strlen(line) - 1] = '\0';
             currCourseID = string_to_ulong(line) + 1;
         
-            for (int i = 0; i < 9; ++i) fgets(line, BUFSIZ, file);
+            for (int i = 0; i < 9; ++i) fgets(line, BUFSIZE, file);
         } else {
             //...
         }
-        memset(line, 0, BUFSIZ);
+        memset(line, 0, BUFSIZE);
     }
     return 0;
 }
+
+int getUserID(const char *userName, char *ID) {
+
+    if (nullptr == userName || nullptr == ID) return -1;
+
+    FILE *file = fopen(USERIDINFO, "r");
+    if (nullptr == file) {
+        printf("UserIDInfo open error\n");
+        return -1;
+    }
+
+    char line[BUFSIZE] = {0};
+    while (nullptr != fgets(line, BUFSIZE, file)) {
+        line[strlen(line) - 1] = '\0';
+//cout << "line = " << line << endl;
+        if(0 == strcmp(&(line[USERIDLENGTH]), userName)) {
+            strncpy(ID, line, USERIDLENGTH - 1);
+            fclose(file);
+            return 0;
+        }
+        memset(line, 0, BUFSIZE);
+    }
+    fclose(file);
+    return 0;
+}
+
+//=============================================================
 
 unsigned long string_to_ulong(char* str) {
     return strtoul(str, NULL, 10);
@@ -122,7 +149,5 @@ int ulong_to_string(char *str,unsigned long num) {
     return 0;
 }
 
-int wbCourseInfo_add_course(void *courseInfo) {
+//=============================================================
 
-
-}
