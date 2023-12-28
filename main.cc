@@ -61,9 +61,8 @@ int main(int argc, char *argv[]) {
             int inputs = 0;
             printf("==========================\n");
             printf("1.create\n");
-            printf("2.delete\n");
-            printf("3.show\n");
-            printf("4.exit\n");   
+            printf("2.show\n");
+            printf("3.exit\n");   
             printf("please input : ");     
             scanf("%d", &inputs);
 
@@ -72,8 +71,7 @@ int main(int argc, char *argv[]) {
             //--------------------
 
             switch (inputs) {
-            case 1: 
-            {
+            case 1: {
                 //-------------------------create
 
                 //输入教室和时间 判断是否冲突
@@ -111,7 +109,7 @@ int main(int argc, char *argv[]) {
                 //输入课程信息
                 ret = instructor.addCourse(classroom, week, sort, currCourseID, maxSeats);
             
-                //......更新文件
+                //更新文件
                 //CourseInfo
                 User::wbCourseInfo_add_course(instructor._tail);
                 //UserInfo 
@@ -121,17 +119,71 @@ int main(int argc, char *argv[]) {
                 fclose(file);
             }
                 break;
-            case 2:
-                //delete
-                break;
-            case 3:
+            case 2: {
                 //show
                 instructor.print();
+
+                //--------------------------------------------------------------- delete or add_files or exit
+                printf("==========================\n");
+                printf("1.delete course\n");
+                printf("2.add files\n");
+                printf("3.delete files\n");
+                printf("4.nothing\n");   
+                printf("please input : ");   
+                scanf("%d", &inputs);  
+                //------------------------------------------------------------
+
+                switch (inputs)
+                {
+                case 1: {   //delete course
+                    // 输入课程编号 判断是否存在
+                    size_t courseID;
+                    printf("please input course ID :  "); scanf("%d", &courseID);
+                    
+                    //课程编号通过 List 检查
+                    
+
+                    //List 链表更新
+                    //对应文件写回
+                    
+                    //......
+
+
+                    //FILE *file = fopen(COURSEINFO, "r+");
+                                        
+                    
+
+                    //......
+                    
+                    //fclose(file);
+                    
+                }
+                    break;
+                case 2: {   //add files
+
+                }
+                    break;
+                case 3: {   //delete files
+
+                }
+                    break;
+                case 4: {   //nothing
+
+                }
+                    break;
+                default:
+                    break;
+                }
+
+                //------------------------------------------------------------
+            }
                 break;
-            case 4:
+            case 3: {
                 //exit
                 printf("byebye\n");
                 flag = false;
+
+            }
                 break;
 
             default:

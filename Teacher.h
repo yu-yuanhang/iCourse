@@ -27,6 +27,8 @@ public:
 public:
     int getCourses();
     int listLoad(const char *courseID, FILE *file);
+
+    int checkCourseID_fromList(size_t courseID);
     
     void print() const;
     //---------------------------------------------------------

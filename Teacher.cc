@@ -140,6 +140,21 @@ int User::listLoad(const char *courseID, FILE *file) {
     return 0;
 }
 
+int User::checkCourseID_fromList(size_t courseID) {
+    if (nullptr == _head) return -1;
+    
+    //head 非空
+    Basic *tmp = (Basic *)_head;
+    while (true) {
+        if (courseID == (tmp->_courseID)) return 0;
+        if (nullptr == (tmp->_next)) {
+            return -1;
+        }
+    }
+
+    return -1;
+}
+
 
 void User::print() const {
     if (0 == _courseNum) {

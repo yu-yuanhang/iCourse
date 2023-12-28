@@ -80,6 +80,10 @@ int checkTime(size_t week, size_t sort, FILE *file) {
     return -1;
 }
 
+
+
+//=============================================================
+
 int getCourseID(size_t &currCourseID) {
 
     // currCourseID 初始化为 0
